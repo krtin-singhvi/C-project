@@ -6,8 +6,8 @@ typedef struct product {
     float Price;
     int Quantity;
     char Supplier[50];
-    char Manufacture[10];
-    char Expiry[10];
+    char Manufacture[20];
+    char Expiry[20];
     struct product * next;
 } Product;
 
