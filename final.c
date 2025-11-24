@@ -3,7 +3,7 @@
 #include <string.h>
 
 #define LEN 50
-#define FILE "inventory.txt"
+#define FILE_NAME "inventory.txt"
 
 typedef struct Item {
     int id;
@@ -20,10 +20,11 @@ typedef struct Category {
     char name[LEN];
     Item *items;
     struct Category *next;
-
 } Category;
 
-Category *create_category(char name[]){
+// CATEGORY FUNCTIONS
+
+Category *create_category(char name[]) {
     Category *new = malloc(sizeof(Category));
     strcpy(new->name, name);
     new->items = NULL;
@@ -31,207 +32,266 @@ Category *create_category(char name[]){
     return new;
 }
 
-void add_category(Category *head){
+void add_category(Category *head) {
     char name[LEN];
     printf("Enter category name: ");
     scanf("%s", name);
-    for(; head->next != NULL; head = head->next){
-        if (strcmp(head->name, name) == 0)
-            printf("Category already exists!\n");
-    }
-    head->next = create_category(name);
 
+    Category *temp = head;
+
+    while (temp->next != NULL) {
+        if (strcmp(temp->name, name) == 0) {
+            printf("Category already exists!\n");
+            return;
+        }
+        temp = temp->next;
+    }
+
+    if (strcmp(temp->name, name) == 0) {
+        printf("Category already exists!\n");
+        return;
+    }
+
+    temp->next = create_category(name);
 }
 
-Category *find_category(Category *head){
+Category *find_category(Category *head) {
     char name[LEN];
+    printf("Enter category name: ");
     scanf("%s", name);
-    for(Category * temp = head; temp->next != NULL; temp = temp->next){
+
+    for (Category *temp = head; temp != NULL; temp = temp->next) {
         if (strcmp(temp->name, name) == 0)
             return temp;
     }
-   return NULL; 
+
+    printf("Category not found.\n");
+    return NULL;
 }
 
-Category *delete_category(char name[], Category *head){
-    for(; head->next != NULL; head = head->next){
-        if (strcmp(head->next->name, name) == 0){
-            Category *temp = head->next;
-            head->next = head->next->next;
-            free(temp);
+Category *delete_category(char name[], Category *head) {
+    Category *temp = head;
+
+    while (temp->next != NULL) {
+        if (strcmp(temp->next->name, name) == 0) {
+            Category *d = temp->next;
+            temp->next = temp->next->next;
+
+            free(d);
+            printf("Category deleted.\n");
+            return head;
         }
+        temp = temp->next;
+    }
+
+    printf("Category not found.\n");
+    return head;
 }
 
-void view_categories(Category *head){
-    for(int i = 1; head != NULL; head = head->next, i++)
-        printf("%d. %s\n",i, head->name);
+void view_categories(Category *head) {
+    int i = 1;
+    for (; head != NULL; head = head->next, i++)
+        printf("%d. %s\n", i, head->name);
 }
 
-//ITEM FUNCTIONS
 
-Item * create_item(int id, char name[], int qty, float price, char mfg_date[], char exp_date[] ,char supplier[]) {
-    Item * new = malloc(sizeof(Item));
-    strcpy(new->name,name);
-    new->id=id;
-    new->qty=qty;
-    new->price=price;
-    strcpy(new->mfg_date,mfg_date);
-    strcpy(new->exp_date,exp_date);
-    strcpy(new->supplier,supplier);
-    new->next=NULL;
+// ITEM FUNCTIONS
+
+Item *create_item(int id, char name[], int qty, float price, char mfg_date[],
+                  char exp_date[], char supplier[]) {
+    Item *new = malloc(sizeof(Item));
+
+    new->id = id;
+    strcpy(new->name, name);
+    new->qty = qty;
+    new->price = price;
+    strcpy(new->mfg_date, mfg_date);
+    strcpy(new->exp_date, exp_date);
+    strcpy(new->supplier, supplier);
+
+    new->next = NULL;
     return new;
 }
 
-void add_item(Category *head, char category_name[]){
-    Category * cat = find_category(head);
-    if (!cat) {
-        return;
-    }
+void add_item(Category *head) {
+    Category *cat = find_category(head);
+    if (!cat) return;
+
     int id;
-    printf("Enter item id : ");
-    scanf("%d", &id);
-    char name[LEN];
-    printf("Enter product name:");
-    scanf("%s", name);
+    char name[LEN], mfg_date[LEN], exp_date[LEN], supplier[LEN];
     int qty;
+    float price;
+
+    printf("Enter item id: ");
+    scanf("%d", &id);
+
+    printf("Enter product name: ");
+    scanf("%s", name);
+
     printf("Quantity supplied: ");
     scanf("%d", &qty);
-    float price;
-    printf("Price of item : ");
-    scanf("%f" , &price);
-    char mfg_date[LEN];
-    printf("Manufacturing Date :");
+
+    printf("Price of item: ");
+    scanf("%f", &price);
+
+    printf("Manufacturing Date: ");
     scanf("%s", mfg_date);
-    char exp_date[LEN];
-    printf("Expiry Date : ");
+
+    printf("Expiry Date: ");
     scanf("%s", exp_date);
-    char supplier[LEN];
-    printf("Supplier : ");
+
+    printf("Supplier: ");
     scanf("%s", supplier);
 
-    Item * checker = cat->items;
-    while (checker!=NULL) {
-        if (checker->id==id) {
+    // Check ID duplicate
+    Item *checker = cat->items;
+    while (checker != NULL) {
+        if (checker->id == id) {
             printf("Item with this ID already exists.\n");
-        }
-        checker=checker->next;
-    }
-    Item * new = create_item(id,name,qty,price,mfg_date,exp_date,supplier)
-    new->next=cat->items;
-    cat->items=new;
-}
-
-void update_item(char name[],Category * head){
-    Category * temp=head;
-    int qty;
-    int price;
-    int choice;
-    printf("What do you want to change?\n");
-    printf("1)Change only price.\n");
-    printf("2)Increase quantity.\n");
-    printf("3)Decrease quantity.\n");
-    printf("4)Increase quantity and change price.\n");
-    printf("5)Decrease quantity and change price.\n");
-    printf("\n");
-    printf("Enter your choice : ")
-    scanf("%d", &choice);
-    Item * change = search_item(name,temp);
-    switch(choice) {
-        case 1 : {
-            printf("New price : ")
-            scanf("%f", &price);
-            change->price=price;
-        }
-        case 2 : {
-            printf("Quantity added : ")
-            scanf("%d", &qty);
-            change->qty+=qty; 
-        }
-        case 3 : {
-            printf("Quantity removed : ")
-            scanf("%d", &qty);
-            change->qty-=qty;
-        }
-        case 4 : {
-            printf("Quantity added : ")
-            scanf("%d", &qty);
-            change->qty+=qty;
-            printf("New price : ")
-            scanf("%f", &price);
-            change->price=price;
-        }
-        case 5 : {
-            printf("Quantity removed : ")
-            scanf("%d", &qty);
-            change->qty-=qty;
-            printf("New price : ")
-            scanf("%f", &price);
-            change->price=price;
-        }
-    }
-}
-
-Item * delete_item(char item[],Category * head){
-    Category * temp=head;
-    
-    while (temp!=NULL) {
-        
-        if (strcmp(temp->items->name,item)==0) {
-            Item * temp2 = temp->items;
-            temp->items=temp->items->next;
-            free(temp2)
             return;
         }
-        
-        Item * temp1=temp->items;
-        while (temp1->next!=NULL) {
-            if (strcmp(temp1->next->name,item)==0) {
-                Item * d = temp1->next;
-                temp1->next=temp1->next->next;
+        checker = checker->next;
+    }
+
+    Item *new = create_item(id, name, qty, price, mfg_date, exp_date, supplier);
+
+    new->next = cat->items;
+    cat->items = new;
+
+    printf("Item added.\n");
+}
+
+Item *search_item(char item[], Category *head) {
+    Category *temp = head;
+
+    while (temp != NULL) {
+        Item *temp1 = temp->items;
+
+        while (temp1 != NULL) {
+            if (strcmp(temp1->name, item) == 0) {
+                return temp1;
+            }
+            temp1 = temp1->next;
+        }
+        temp = temp->next;
+    }
+    printf("Item not found.\n");
+    return NULL;
+}
+
+void update_item(char name[], Category *head) {
+    int qty;
+    float price;
+    int choice;
+
+    Item *change = search_item(name, head);
+    if (!change) return;
+
+    printf("What do you want to change?\n");
+    printf("1) Change price\n");
+    printf("2) Increase quantity\n");
+    printf("3) Decrease quantity\n");
+    printf("4) Increase quantity & change price\n");
+    printf("5) Decrease quantity & change price\n");
+    printf("Enter your choice: ");
+
+    scanf("%d", &choice);
+
+    switch (choice) {
+    case 1:
+        printf("New price: ");
+        scanf("%f", &price);
+        change->price = price;
+        break;
+
+    case 2:
+        printf("Quantity added: ");
+        scanf("%d", &qty);
+        change->qty += qty;
+        break;
+
+    case 3:
+        printf("Quantity removed: ");
+        scanf("%d", &qty);
+        change->qty -= qty;
+        break;
+
+    case 4:
+        printf("Quantity added: ");
+        scanf("%d", &qty);
+        change->qty += qty;
+        printf("New price: ");
+        scanf("%f", &price);
+        change->price = price;
+        break;
+
+    case 5:
+        printf("Quantity removed: ");
+        scanf("%d", &qty);
+        change->qty -= qty;
+        printf("New price: ");
+        scanf("%f", &price);
+        change->price = price;
+        break;
+    }
+
+    printf("Item updated.\n");
+}
+
+Item *delete_item(char item[], Category *head) {
+    Category *temp = head;
+
+    while (temp != NULL) {
+
+        // Case 1: deleting first node of item list
+        if (temp->items != NULL && strcmp(temp->items->name, item) == 0) {
+            Item *d = temp->items;
+            temp->items = temp->items->next;
+            free(d);
+            printf("Item deleted.\n");
+            return NULL;
+        }
+
+        // Case 2: deleting inside list
+        Item *temp1 = temp->items;
+
+        while (temp1 != NULL && temp1->next != NULL) {
+            if (strcmp(temp1->next->name, item) == 0) {
+                Item *d = temp1->next;
+                temp1->next = temp1->next->next;
                 free(d);
+                printf("Item deleted.\n");
                 return temp1;
             }
-            temp1=temp1->next;
+            temp1 = temp1->next;
         }
-        temp=temp->next;
+
+        temp = temp->next;
     }
-    printf("Item not found.\n")
-    return;
+
+    printf("Item not found.\n");
+    return NULL;
 }
 
-void view_items(Category * head){
-    Category * temp=head;
-    while (temp!=NULL) {
-        Item * temp1=temp->items;
-        while (temp1!=NULL) {
-            printf("\n------------------\n");
-            printf("Product ID : %d\n", temp1->id);
-            printf("Product Name : %s\n", temp1->name);
-            printf("Product Price : %f\n", temp1->price);
-            printf("Quantity Available : %d\n", temp1->qty);
-            printf("Manufactured On : %s\n", temp1->mfg_date);
-            printf("Expires on : %s\n", temp1->exp_date);
-            printf("Supplied by : %s\n", temp1->supplier);
-            printf("\n------------------\n");
-            temp1=temp1->next;
-        }
-        temp=temp->next; 
-    }
-}
+void view_items(Category *head) {
+    Category *temp = head;
 
-Item * search_item(char item[],Category * head){
-    Category * temp=head;
-    while(temp!=NULL) {
-        Item * temp1=temp->items;
-        while (temp1!=NULL) {
-            Item * temp1=temp->items;
-            if (strcmp(temp1->name,item)==0) {
-                return temp1;
-            }
-            temp1=temp1->next;
+    while (temp != NULL) {
+        Item *temp1 = temp->items;
+
+        while (temp1 != NULL) {
+            printf("\n------------------\n");
+            printf("Product ID: %d\n", temp1->id);
+            printf("Product Name: %s\n", temp1->name);
+            printf("Product Price: %.2f\n", temp1->price);
+            printf("Quantity Available: %d\n", temp1->qty);
+            printf("Manufactured On: %s\n", temp1->mfg_date);
+            printf("Expires On: %s\n", temp1->exp_date);
+            printf("Supplied By: %s\n", temp1->supplier);
+            printf("------------------\n");
+            temp1 = temp1->next;
         }
-        temp=temp->next;
+
+        temp = temp->next;
     }
-    printf("Item not found\n");
-    return;
 }
