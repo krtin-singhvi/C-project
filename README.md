@@ -177,7 +177,7 @@ Returns the updated head of the category list.
 Adds a new item under a valid category after taking its name and price.
 Prevents duplicate items.
 
-**add_batch(Category *c_head)**
+**add_batch(Category *c_head)***
 Adds a new batch to an item inside a category.
 Collects full batch details from the user.
 
@@ -185,15 +185,15 @@ Collects full batch details from the user.
 
 ### **Update Functions**
 
-**update_category(Category *c_head)**
+**update_category(Category *c_head)***
 Renames a category if it exists.
 Prints an error otherwise.
 
-**update_batch(Category *c_head)**
+**update_batch(Category *c_head)***
 Searches for a batch by category → item → batch ID.
 Updates only the quantity.
 
-**update_item(Category *c_head)**
+**update_item(Category *c_head)***
 Changes the price of an item under a category.
 Updates only if both exist.
 
@@ -201,15 +201,15 @@ Updates only if both exist.
 
 ### **Delete Functions**
 
-**delete_category(Category *head)**
+**delete_category(Category *head)***
 Deletes the entire category and frees all its items and batches.
 Returns the new head of the list.
 
-**delete_item(Category *head)**
+**delete_item(Category *head)***
 Finds and deletes an item from any category.
 Also deletes all its batches.
 
-**delete_batch(Category *c_head)**
+**delete_batch(Category *c_head)***
 Searches for a batch by ID across all items and categories.
 Deletes it and frees its memory.
 
@@ -217,15 +217,15 @@ Deletes it and frees its memory.
 
 ### **Search Functions**
 
-**search_category(Category *head)**
+**search_category(Category *head)***
 Prints all items inside a specific category.
 Shows an error if the category doesn't exist.
 
-**search_item(Category *head)**
+**search_item(Category *head)***
 Looks for an item across all categories.
 Prints all its batches if found.
 
-**search_batch(Category *c_head)**
+**search_batch(Category *c_head)***
 Searches through the entire inventory for a batch ID.
 Prints its full details with category and item names.
 
@@ -233,7 +233,7 @@ Prints its full details with category and item names.
 
 ### **Display Function**
 
-**display_all(Category *c_head)**
+**display_all(Category *c_head)***
 Prints all categories, items, and batches in a clear structure.
 Gives a complete view of the inventory.
 
@@ -241,11 +241,11 @@ Gives a complete view of the inventory.
 
 ### **File I/O Functions**
 
-**save_to_file(Category *head)**
+**save_to_file(Category *head)***
 Writes the entire inventory to `inventory.txt` in a simple text format.
 Makes sure data is saved even after closing the program.
 
-**load_from_file()**
+**load_from_file()***
 Reads from `inventory.txt` and rebuilds all categories, items, and batches.
 If the file doesn’t exist, begins with an empty inventory.
 
