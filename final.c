@@ -4,8 +4,9 @@
 
 #define LEN 50
 #define FILE_NAME "inventory.txt"
-
+// Creating the structures
 typedef struct Batch {
+    // Fields of an individual batch
     int id;
     int qty;
     char mfg_date[LEN];
@@ -14,6 +15,7 @@ typedef struct Batch {
     struct Batch *next;
 } Batch;
 typedef struct Item {
+    // Fields of an item under which batches will be stored
     char name[LEN];
     float price;
     struct Item *next;
@@ -21,6 +23,7 @@ typedef struct Item {
 } Item;
 
 typedef struct Category {
+    // Fields of a Category under which items will be stored
     char name[LEN];
     Item *item_head;
     struct Category *next;
@@ -63,7 +66,7 @@ Category *find_category(Category *c_head, char c_name[]){
 
     while(c_head != NULL){
         if(strcmp(c_head->name, c_name) == 0)
-            return c_head;
+            return c_head; // returning pointer of the category we seek
         c_head = c_head->next;
     }
     return NULL;
@@ -72,12 +75,12 @@ Category *find_category(Category *c_head, char c_name[]){
 
 Item *find_item(Category *c_head, char item_name[], char c_name[]){
     Category *cat = find_category(c_head, c_name);
-    if(!cat) return NULL;
+    if(!cat) return NULL; // if category not found then return NULL
     Item * temp = cat->item_head;
 
     while (temp != NULL){
         if (strcmp(temp->name, item_name) == 0)
-            return temp;
+            return temp; // returning pointer of the item we seek
         temp = temp->next;
     }
     return NULL;
@@ -85,6 +88,7 @@ Item *find_item(Category *c_head, char item_name[], char c_name[]){
 
 //==================================ADD FUNCTIONS=====================================
 
+// Adding a category with its details
 Category *add_category(Category *cat_head) {
     char name[LEN];
     printf("Enter Category Name: ");
@@ -92,16 +96,16 @@ Category *add_category(Category *cat_head) {
 
     if(find_category(cat_head, name)){
         printf("Category Already Exists!\n");
-        return cat_head;
+        return cat_head; //returning pointer as it is if category already exists
     }
     Category *new = create_category(name);
     new->next = cat_head;
     cat_head = new;
 
     printf("Category added.\n");
-    return new;
+    return new; //new is assigned at the head 
 }
-
+// Adding an item with its details
 void add_item(Category *cat_head) {
     float price;
     char item_name[LEN], c_name[LEN];
@@ -131,7 +135,7 @@ void add_item(Category *cat_head) {
     printf("Item added.\n");
     return;
 }
-
+// Adding a batch with its details
 void add_batch(Category *c_head){
     int id, qty;
     char mfg_date[LEN], exp_date[LEN], supplier[LEN];
@@ -173,6 +177,8 @@ void add_batch(Category *c_head){
 }
 
 //=======================================UPDATE FUNCTIONS===================================
+
+// Updating a category's name
 void update_category(Category *c_head){
     char c_name[LEN];
     printf("Enter Category Name: ");
@@ -186,9 +192,10 @@ void update_category(Category *c_head){
     printf("Enter New Name: ");
     scanf("%s", new_name);
     strcpy(cat->name, new_name);
+    printf("Updated Category.\n");
     return;
 }
-
+// Updating a batch by using batch ID
 void update_batch(Category * c_head){
     char c_name[LEN], item_name[LEN];
     int qty, batch_id;
@@ -226,6 +233,7 @@ void update_batch(Category * c_head){
     printf("Batch not found.\n");
     return;
 }
+// Updating an item's details by name
 
 void update_item(Category *c_head){
     float price;
@@ -253,6 +261,8 @@ void update_item(Category *c_head){
 }
 //====================================DELETE FUNCTION===============================================
 
+// Deleting a category 
+
 Category *delete_category(Category *head) {
     if(!head){
         printf("No categories to delete.\n");
@@ -261,7 +271,7 @@ Category *delete_category(Category *head) {
     char name[LEN];
     printf("Enter Category Name: ");
     scanf("%s", name);
-
+    //Case 1 : Deleting head category and its details
     Category *temp = head;
     if (strcmp(head->name, name)==0){
         Item *i = head->item_head;
@@ -281,7 +291,7 @@ Category *delete_category(Category *head) {
         printf("Category deleted.\n");
         return head;
     }
-    
+    // Case 2 : Deleting at any other position 
     while (temp->next != NULL) {
         if (strcmp(temp->next->name, name) == 0){
             Category *d = temp->next;
@@ -308,6 +318,8 @@ Category *delete_category(Category *head) {
     printf("Category not found.\n");
     return head;
 }
+
+// Deleting an item 
 
 void delete_item(Category *head) {
     if(!head){
@@ -363,6 +375,9 @@ void delete_item(Category *head) {
     printf("Item not found.\n");
     return;
 }
+
+// Deleting a batch
+
 void delete_batch(Category* c_head){
     if(!c_head){
         printf("No categories to delete.\n");
@@ -377,12 +392,14 @@ void delete_batch(Category* c_head){
         Item *item = cat->item_head;
         while(item != NULL){
             Batch *batch = item->batch_head;
+            // Case 1 : Deleting first batch
             if (batch != NULL && batch->id == id){
                 item->batch_head = batch->next;
                 free(batch);
                 printf("Batch deleted.\n");
                 return;
             }
+            // Case 2 : Deleting any other batch
             while(batch != NULL && batch->next != NULL){
                 if(batch->next->id == id){
                     Batch *temp = batch->next;
@@ -401,7 +418,11 @@ void delete_batch(Category* c_head){
     printf("Batch not found.\n");
 
 }
+
 //=====================================================SEARCH FUNCTIONS========================================================
+
+// Searching a category
+
 void search_category(Category *head){
     char c_name[LEN];
     printf("Enter Category name to search:");
@@ -409,7 +430,7 @@ void search_category(Category *head){
     Category* cat = find_category(head, c_name);
     
     if(cat){
-        printf("CATEGORY: %s\n\n", c_name);
+        printf("CATEGORY: %s\n", c_name);
         Item *i = cat->item_head;
         while(i){
             printf("ITEM: %s\n", i->name);
@@ -420,18 +441,21 @@ void search_category(Category *head){
     printf("Category not found.\n");
     return;
 }
+
+// Searching an item
+
 void search_item(Category *head) {
     char item[LEN];
     printf("Enter item name to search: ");
     scanf("%s", item);
-    Category *cat = head;
+    Category *cat = head; // running 2 while loops to first access category then item
     while (cat != NULL) {
         Item *i = find_item(head, item, cat->name);
         if(i){
-            printf("ITEM: %s\n", item);
+            printf("ITEM: %s Price: %.2f\n", item, i->price);
             Batch *b = i->batch_head;
             while(b){
-                printf("BATCH: %d %s %s %s %d\n", b->id, b->mfg_date, b->exp_date, b->supplier, b->qty);
+                printf("[BATCH] ID: %d | MFGDATE: %s | EXPDATE: %s | SUPPLIER: %s | QTY: %d\n", b->id, b->mfg_date, b->exp_date, b->supplier, b->qty);
                 b = b->next;
             }
             return;
@@ -441,11 +465,14 @@ void search_item(Category *head) {
     printf("Item not found.\n");
     return;
 }
+
+// Searching a batch
+
 void search_batch(Category *c_head){
     int id;
     printf("Enter batch id to search: ");
     scanf("%d", &id);
-
+    // running 3 while loops to first access category then item then batch
     while(c_head){
         Item *i = c_head->item_head;
         while(i){
@@ -453,8 +480,8 @@ void search_batch(Category *c_head){
             while(b){
                 if(b->id == id){
                     printf("BATCH CATEGORY: %s\n", c_head->name);
-                    printf("BATCH ITEM: %s\n", i->name);
-                    printf("BATCH: %d %s %s %s %d\n", b->id, b->mfg_date, b->exp_date, b->supplier, b->qty);
+                    printf("BATCH ITEM: %s Price: %.2f\n", i->name, i->price);
+                    printf("[BATCH] ID: %d | MFGDATE: %s | EXPDATE: %s | SUPPLIER: %s | QTY: %d\n", b->id, b->mfg_date, b->exp_date, b->supplier, b->qty);
                     return;
                 }
                 b = b->next;
@@ -473,11 +500,12 @@ void display_all(Category *c_head){
         printf("[CATEGORY]: %s\n", c_head->name);
         while(i){
             Batch *b = i->batch_head;
-            printf("[ITEM]: %s\n", i->name);
+            printf("[ITEM]: %s Price: %.2f\n", i->name, i->price);
             while(b){         
-                    printf("[BATCH]: %d %s %s %s %d\n", b->id, b->mfg_date, b->exp_date, b->supplier, b->qty);
+                    printf("[BATCH] ID: %d | MFGDATE: %s | EXPDATE: %s | SUPPLIER: %s | QTY: %d\n", b->id, b->mfg_date, b->exp_date, b->supplier, b->qty);
                     b = b->next;
                 }
+                printf("---------------------------------------------------------------------------------------------------------\n");
                 i = i->next;
             }
             printf("\n");
@@ -593,7 +621,7 @@ Category* load_from_file() {
     return head;
 }
 int main(){
-    // 1. Load data immediately on startup
+
     Category *head = load_from_file(); 
 
     int choice;
@@ -608,7 +636,7 @@ int main(){
         printf("7. Delete Category\n");
         printf("8. Delete Item\n");
         printf("9. Delete Batch\n");
-        printf("10. Search Category\n"); // Combined for clarity
+        printf("10. Search Category\n");
         printf("11. Search Item\n");
         printf("12. Search Batch\n");
         printf("13. Display Inventory\n");
