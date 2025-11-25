@@ -90,9 +90,9 @@ Memory is freed properly to avoid leaks.
 `display_all()` prints everything in a neat order:
 
 ```
-Category  
-  Item  
-    Batch  
+[CATEGORY]  
+[ITEM]
+[BATCH]  
 ```
 
 ### **File Saving and Loading**
