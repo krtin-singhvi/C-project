@@ -139,54 +139,121 @@ Responsible for saving data to `inventory.txt` and loading it back when the prog
 
 ## 5. Short Explanation of Each Function
 
-### Creation
+### **Creation Functions**
 
-`create_category()` – Makes a new category and returns it.
-`create_item()` – Makes a new item with a name and price.
-`create_batch()` – Makes a new batch with id, qty, dates, and supplier.
+**create_category(char name[])**
+Creates a new category, sets its name, and initializes its item list to empty.
+Returns the newly created category node.
 
-### Finding
+**create_item(char name[], float price)**
+Makes a new item with the given name and price.
+Also sets its batch list to empty and returns it.
 
-`find_category()` – Looks for a category by name.
-`find_item()` – Looks for an item inside a category.
-
-### Adding
-
-`add_category()` – Adds a new category if it doesn’t already exist.
-`add_item()` – Adds a new item to a category.
-`add_batch()` – Adds a new batch to an item.
-
-### Updating
-
-`update_category()` – Changes the category’s name.
-`update_item()` – Changes the item’s price.
-`update_batch()` – Changes the quantity of a batch.
-
-### Deleting
-
-`delete_category()` – Removes a category and everything inside it.
-`delete_item()` – Removes an item and all its batches.
-`delete_batch()` – Removes a batch by ID.
-
-### Searching
-
-`search_category()` – Shows all items in that category.
-`search_item()` – Shows all batches of that item.
-`search_batch()` – Shows details of a batch.
-
-### Display
-
-`display_all()` – Prints the entire inventory.
-
-### File I/O
-
-`save_to_file()` – Saves everything to `inventory.txt`.
-`load_from_file()` – Loads data back from the file.
-
-### Main
-
-`main()` – Runs the menu, handles user choices, loads on start, saves on exit.
+**create_batch(int id, int qty, char mfg_date[], char exp_date[], char supplier[])**
+Creates a batch with all its details like ID, quantity, and dates.
+Returns the batch node ready to be linked to an item.
 
 ---
 
-If you want, I can turn this into a **downloadable README.md file**.
+### **Find Functions**
+
+**find_category(Category *c_head, char c_name[])**
+Searches through the category list and returns the category with the matching name.
+If it doesn't exist, returns NULL.
+
+**find_item(Category *c_head, char item_name[], char c_name[])**
+First finds the category, then looks for the item inside that category.
+Returns the item node or NULL if not found.
+
+---
+
+### **Add Functions**
+
+**add_category(Category *cat_head)**
+Takes a category name from the user and adds it if it does not already exist.
+Returns the new head of the category list.
+
+**add_item(Category *cat_head)**
+Asks for category name, then item name and price, and adds the new item under the correct category.
+Makes sure the item does not already exist.
+
+**add_batch(Category *c_head)**
+Asks for category, item, and full batch details.
+Adds the new batch at the beginning of that item’s batch list.
+
+---
+
+### **Update Functions**
+
+**update_category(Category *c_head)**
+Lets the user rename a category.
+If the category doesn’t exist, prints an error.
+
+**update_batch(Category *c_head)**
+Searches for a specific batch using category → item → batch ID.
+Updates only the quantity of that batch.
+
+**update_item(Category *c_head)**
+Lets the user update the price of an existing item.
+Searches for the category and item before applying the change.
+
+---
+
+### **Delete Functions**
+
+**delete_category(Category *head)**
+Deletes the entire category and frees all its items and batches properly.
+Returns the new head of the category list.
+
+**delete_item(Category *head)**
+Deletes an item from whichever category it belongs to.
+Also frees all batches under that item.
+
+**delete_batch(Category *c_head)**
+Searches the entire inventory for a batch by ID.
+Deletes the batch and frees its memory.
+
+---
+
+### **Search Functions**
+
+**search_category(Category *head)**
+Prints all items under a specific category.
+If the category is not found, notifies the user.
+
+**search_item(Category *head)**
+Searches for an item across all categories.
+If found, prints all batches belonging to that item.
+
+**search_batch(Category *c_head)**
+Searches every category and item for a matching batch ID.
+Prints the batch details along with the category and item it belongs to.
+
+---
+
+### **Display Function**
+
+**display_all(Category *c_head)**
+Prints the entire inventory in a structured way: Categories → Items → Batches.
+Helps the user see everything stored so far.
+
+---
+
+### **File I/O Functions**
+
+**save_to_file(Category *head)**
+Writes all categories, items, and batches into `inventory.txt` in a simple readable format.
+Ensures your inventory is not lost when you close the program.
+
+**load_from_file()**
+Reads data from `inventory.txt` (if it exists) and rebuilds the entire inventory structure.
+If the file doesn’t exist, starts with an empty inventory.
+
+---
+
+### **Main Function**
+
+**main()**
+Starts by loading saved data, then shows a menu and handles all user choices in a loop.
+Auto-saves all data before exiting to prevent data loss.
+
