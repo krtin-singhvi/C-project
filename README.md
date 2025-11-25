@@ -1,10 +1,4 @@
-Here is the **simplified, humanized, easy-to-read README.md**.
-No fancy jargon. No over-technical explanations.
-Just clear English that your prof will actually understand.
-
----
-
-# Inventory Management System — README
+# Inventory Management System
 
 ## 1. Project Description
 
