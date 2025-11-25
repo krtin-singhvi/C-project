@@ -37,7 +37,7 @@ The program also **saves all data into a file** (`inventory.txt`) so the invento
 
 ---
 
-## 3. How the Program Works (Simple Explanation)
+## 3. How the Program Works
 
 ### **Data Structure**
 
