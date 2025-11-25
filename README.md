@@ -141,113 +141,160 @@ Responsible for saving data to `inventory.txt` and loading it back when the prog
 
 ### **Creation Functions**
 
-**create_category(char name[])**
+create_category(char name[])
+```
 Creates a new category, sets its name, and initializes its item list to empty.
 Returns the newly created category node.
+used by add_category
+```
 
-**create_item(char name[], float price)**
+create_item(char name[], float price)
+```
 Creates a new item with the given name and price.
-Initializes its batch list and returns the item.
+Initializes its batch list and returns the item node.
+used by add_item
+```
 
-**create_batch(int id, int qty, char mfg_date[], char exp_date[], char supplier[])**
+create_batch(int id, int qty, char mfg_date[], char exp_date[], char supplier[])
+```
 Creates a batch with ID, quantity, dates, and supplier.
 Returns the batch node.
+used by add_batch
+```
 
 ---
 
 ### **Find Functions**
 
-**find_category(Category "*"c_head, char c_name[])***
+find_category(Category "*"c_head, char c_name[])
+```
 Searches through the category list for a matching name.
 Returns the category or NULL if not found.
+used in add, update and search functions.
+```
 
-**find_item(Category *c_head, char item_name[], char c_name[])***
+find_item(Category *c_head, char item_name[], char c_name[])
+```
 Looks for a category first, then searches for the item inside it.
 Returns the item or NULL.
+used in add, update and search functions.
+```
 
 ---
 
 ### **Add Functions**
 
-**add_category(Category *cat_head)***
+add_category(Category *cat_head)
+```
 Takes category name from the user and adds it if it doesn't already exist.
 Returns the updated head of the category list.
-
-**add_item(Category *cat_head)***
+```
+add_item(Category *cat_head)
+```
 Adds a new item under a valid category after taking its name and price.
 Prevents duplicate items.
+returns void
+```
 
-**add_batch(Category *c_head)***
+add_batch(Category *c_head)
+```
 Adds a new batch to an item inside a category.
 Collects full batch details from the user.
+returns void
+```
 
 ---
 
 ### **Update Functions**
 
-**update_category(Category *c_head)***
+update_category(Category *c_head)
+```
 Renames a category if it exists.
 Prints an error otherwise.
+returns void
+```
 
-**update_batch(Category *c_head)***
+update_batch(Category *c_head)
+```
 Searches for a batch by category → item → batch ID.
 Updates only the quantity.
+returns void
+```
 
-**update_item(Category *c_head)***
+update_item(Category *c_head)
+```
 Changes the price of an item under a category.
 Updates only if both exist.
+returns void
+```
 
 ---
 
 ### **Delete Functions**
 
-**delete_category(Category *head)***
+delete_category(Category *head)
+```
 Deletes the entire category and frees all its items and batches.
 Returns the new head of the list.
+```
 
-**delete_item(Category *head)***
+delete_item(Category *head)
+```
 Finds and deletes an item from any category.
 Also deletes all its batches.
+```
 
-**delete_batch(Category *c_head)***
+delete_batch(Category *c_head)
+```
 Searches for a batch by ID across all items and categories.
 Deletes it and frees its memory.
+```
 
 ---
 
 ### **Search Functions**
 
-**search_category(Category *head)***
+search_category(Category *head)
+```
 Prints all items inside a specific category.
 Shows an error if the category doesn't exist.
+```
 
-**search_item(Category *head)***
+search_item(Category *head)
+```
 Looks for an item across all categories.
 Prints all its batches if found.
+```
 
-**search_batch(Category *c_head)***
+search_batch(Category *c_head)
+```
 Searches through the entire inventory for a batch ID.
 Prints its full details with category and item names.
-
+```
 ---
 
 ### **Display Function**
 
-**display_all(Category *c_head)***
+display_all(Category *c_head)
+```
 Prints all categories, items, and batches in a clear structure.
 Gives a complete view of the inventory.
-
+```
 ---
 
 ### **File I/O Functions**
 
-**save_to_file(Category *head)***
+save_to_file(Category *head)
+```
 Writes the entire inventory to `inventory.txt` in a simple text format.
 Makes sure data is saved even after closing the program.
+```
 
-**load_from_file()***
+load_from_file()
+```
 Reads from `inventory.txt` and rebuilds all categories, items, and batches.
 If the file doesn’t exist, begins with an empty inventory.
+```
 
 ---
 
