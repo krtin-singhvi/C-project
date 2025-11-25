@@ -157,7 +157,7 @@ Returns the batch node.
 
 ### **Find Functions**
 
-**find_category(Category *c_head, char c_name[])***
+**find_category(Category "*"c_head, char c_name[])***
 Searches through the category list for a matching name.
 Returns the category or NULL if not found.
 
