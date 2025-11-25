@@ -157,11 +157,11 @@ Returns the batch node.
 
 ### **Find Functions**
 
-**find_category(Category *c_head, char c_name[])**
+**find_category(Category *c_head, char c_name[])***
 Searches through the category list for a matching name.
 Returns the category or NULL if not found.
 
-**find_item(Category *c_head, char item_name[], char c_name[])**
+**find_item(Category *c_head, char item_name[], char c_name[])***
 Looks for a category first, then searches for the item inside it.
 Returns the item or NULL.
 
@@ -169,11 +169,11 @@ Returns the item or NULL.
 
 ### **Add Functions**
 
-**add_category(Category *cat_head)**
+**add_category(Category *cat_head)***
 Takes category name from the user and adds it if it doesn't already exist.
 Returns the updated head of the category list.
 
-**add_item(Category *cat_head)**
+**add_item(Category *cat_head)***
 Adds a new item under a valid category after taking its name and price.
 Prevents duplicate items.
 
