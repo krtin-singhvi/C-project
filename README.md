@@ -132,8 +132,7 @@ Built the **Create, Find, Add, and Display** functions.
 Basically handled how data is created, linked together, and shown to the user.
 
 **Ved Savjani (BE2025029)**
-Made the **File I/O system**.
-Responsible for saving data to `inventory.txt` and loading it back when the program starts.
+Project report
 
 ---
 
